@@ -1,0 +1,36 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<style>
+    label {
+        font-size: 16px;
+        color: black;
+        font-weight: 600;
+    }
+
+    .errorlist {
+        color: red;
+    }
+
+    input {
+        border: 1px solid black;
+    }
+</style>
+<br>
+
+<div class="container" style="box-shadow:2px 2px 2px black;background-color:ghostwhite;border:1px solid black;">
+    <div>
+        <form method="POST" style="margin:5%;">
+            {% csrf_token %}
+            <h2>Are you sure you want to delete the post "{{ object.title }}"</h2>
+            <div>
+                <button type="submit" style="border:none;"><a class="waves-effect waves-light btn"
+                        style="background-color: red;">Yes delete</a></button>
+                <a class="waves-effect waves-light btn" style="background-color: green;"
+                    href="{% url 'post-detail' object.id %}">No</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

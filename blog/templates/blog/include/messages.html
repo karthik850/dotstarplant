@@ -1,0 +1,53 @@
+{% if messages %}
+{% for message in messages %}
+
+    {% if message.tags == 'success' %}
+    <div class="toast text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">{{message.tags}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        <div class="toast-body">
+        {{message}}
+        </div>
+    </div>
+    {% elif message.tags == 'info' %}
+    <div class="toast text-white bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">{{message.tags}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        <div class="toast-body">
+        {{message}}
+        </div>
+    </div>
+    {% elif message.tags == 'warning' %}
+    <div class="toast text-white bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">{{message.tags}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        <div class="toast-body">
+        {{message}}
+        </div>
+    </div>
+    {% elif message.tags == 'error'%}
+    <div class="toast text-white bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">{{message.tags}}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        <div class="toast-body">
+        {{message}}
+        </div>
+    </div>
+    {% endif %}
+
+  
+{% endfor %}
+{% endif %}
+<script>
+    $(document).ready(function(){
+      $('.toast').toast('show');
+    });
+    </script>

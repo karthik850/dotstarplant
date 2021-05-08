@@ -1,0 +1,50 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8">
+
+      {% if fcount %}
+      {% for i in friend %}
+      {% ifequal user i.to_user %}
+      <table>
+        <tr>
+          <td>
+            <img id="userimg" src="{{i.from_user.profile.image.url}}" class="circle responsive-img">
+          </td>
+          <td>
+
+            <div class="col s12" style="margin-top:3%;">
+              <span class="black-text" style="font-size: 35px;">
+                <a class="text-decoration-none" href="{% url 'user-posts' i.from_user %}" style="font-size:50px;color:black;">{{i.from_user}}</a>
+              </span>
+              <br>
+              <form action="{% url 'accept_request' i.id i.from_user.username %}" style="float:left;" >
+                <button class="btn btn-primary" type="submit">accept
+                </button>
+              </form>
+              <form action="{% url 'reject_request' i.id i.from_user.username %}" style="margin-left:2%;">
+                <button class="btn btn-danger" type="submit">reject
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+      {% endifequal %}
+      {% endfor %}
+      {% else %}
+        <h2>NO Requests</h2> 
+      {% endif %}
+
+    </div>
+
+    {% include 'blog/include/sidebar.html' %}
+  </div>
+</div>
+
+{% endblock content %}

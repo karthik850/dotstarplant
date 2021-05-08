@@ -1,0 +1,16 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+
+<div class="container"
+    style="box-shadow:2px 2px 2px black;background-color:ghostwhite;border:1px solid black;border-radius:10px 20px;">
+    <div>
+        <form method="POST" style="margin:5%;" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button type="submit" class="btn btn-success" style="border:none;">post</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  #mydiv::-webkit-scrollbar {
+    display: none;
+  }
+
+  #commentsec1::-webkit-scrollbar {
+    display: none;
+  }
+
+  #mydiv #commentsec {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  small {
+    color: black;
+  }
+
+  #commentdesc {
+    color: black;
+  }
+</style>
+
+<div class="container-xl">
+  <div class="row">
+    <div class="col-sm-8">
+
+      <div id="{{object.id}}" class="card" style="background-color:lightgray;border-radius:5px 10px;margin-top:1%;">
+      <div class="card-header" style="background-color:lightgray;border-radius:5px 10px;">
+            <img id="postimg" class="img-thumbnail rounded-circle" src="{{ object.author.profile.image.url }}"><!-- notice the "circle" class -->
+
+            <span class="black-text" style="font-size: 20px;">
+              <a class="text-decoration-none" href="{% url 'user-posts' object.author.username %}" style="font-size: 30px;color:black;">{{object.author }} </a>
+            </span>
+            <span class="black-text" style="font-size: 15px;">
+              <small>{{ object.date_posted }}</small>
+            </span>
+            {% if object.author == user %}
+            <a class="btn btn-success btn-sm" href="{% url 'post-update' object.id %}">update</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'post-delete' object.id %}">delete</a>
+            {% endif %}
+        </div>
+        <div class="card-body" style="margin-left:1%">
+          <div>
+            <h4 class="card-title" style="color:black;text-transform: capitalize;">{{ object.title }}</h4>
+            {% if object.image != "default.jpg" %}
+            <a href="{{object.image.url}}"><img src="{{object.image.url}}"
+                style="width:100%;height:400px;object-fit: cover; border-radius:10px;"></a>
+            {% endif %}
+            <p class="card-text" style="color:black;font-size:16px;">{{ object.content }}</p>
+          </div>
+          <div id="likesection{{object.id}}">
+            {% include 'blog/likesection.html' %}
+          </div>
+          <div id="commentsec"
+            style="height:400px;border:0.5px solid rgba(0, 0, 0, 0.096);border-radius:5px;margin-top:5%;">
+            <div id="commentsec1" style="height:270px;overflow-y:scroll;margin-left:2%;">
+              {% if not object.comments.all %}
+              no comments
+              {% else %}
+              <p style="color:black;">comments...</p>
+              <hr>
+              {% for comment in object.comments.all reversed %}
+              <hr>
+              <strong><a href="{% url 'user-posts' comment.name %}">{{ comment.name}}</a></strong>-<small>{{comment.date_posted }}</small>
+              <p id="commentdesc">{{ comment.description }}</p>
+              {% endfor %}
+              {% endif %}
+            </div>
+            <div style="height:100px;position: relative;top:-1%;width:100%;background-color: rgba(61, 58, 58, 0.158);">
+              <form action="{% url 'addcomment' object.id %}" method="POST" style="margin:5%;">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                  <input type="text" name="desc" class="form-control" placeholder="add comment" aria-label="Recipient's username" aria-describedby="button-addon2">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Submit</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+          <script>
+            function likedusers() {
+              var x = document.getElementById("mydiv");
+              var y = document.getElementById("commentsec");
+              if (x.style.display == "block") {
+                x.style.display = "none";
+                y.style.display = "block";
+              } else {
+                x.style.display = "block";
+                y.style.display = "none";
+              }
+            }
+            function commentedusers() {
+              var y = document.getElementById("commentsec");
+              var x = document.getElementById("mydiv");
+              if (y.style.display == "block") {
+                y.style.display = "none";
+                x.style.display = "none"
+              } else {
+                y.style.display = "block";
+                x.style.display = "none"
+              }
+            }
+          </script>
+
+        </div>
+
+
+
+    </div>
+  </div>
+
+    {% include 'blog/include/sidebar.html' %}
+  </div>
+
+</div>
+<div style="position: fixed;bottom:5%;right:2%;">
+  <a href="#top"><img src="https://cdn3.iconfinder.com/data/icons/common-4/24/ui-12-512.png"
+      style="height:50px;width:50px;"></a>
+</div>
+
+
+{% endblock content %}

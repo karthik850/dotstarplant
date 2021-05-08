@@ -1,0 +1,154 @@
+{% load static %}
+<head>
+<!--<meta http-equiv="Refresh" content="10">-->
+<style>
+  .likedusers {
+    float: left;
+    font-size:15px;
+  }
+
+  #like {
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    float: left;
+  }
+
+  #likedusers {
+    margin-left: -8%;
+  }
+
+  table {
+    border-collapse: unset;
+  }
+
+  .likedisplay {
+    width: 9%;
+  }
+
+  .savepost {
+    text-align: right;
+  }
+</style>
+</head>
+{% if user.is_authenticated %}
+<form action="{% url 'blogpost_like1' %}">
+  <table class="liketable">
+    <tbody>
+  {% if post.id %}
+    <tr>
+      <td class="likedisplay">
+        {% if user in post.likes.all %}
+        <button id="like" type="submit" name="posts_id" value="{{post.id}}">
+          <img width="50" height="50" src="{% static 'blog/download1.png' %}">
+        </button>
+        {% else %}
+        <button id="like" type="submit" name="posts_id" value="{{post.id}}">
+          <img width="50" height="50" src="{% static 'blog/download.png' %}">
+        </button>
+        {% endif %}
+      </td>
+      <td class="likedisplay">
+        <p class="likedusers" style="color:black;">{{total_likes}}Like{{total_likes|pluralize}}</p>
+      </td>
+      <td class="savepost">
+        <form action="{% url 'save' %}">
+          {% if post in user.savedposts.posts.all %}
+          <button type="submit" class="btn btn-dark btn-sm" id="save" name="saveid" value="{{post.id}}">saved</button>
+          {% else %}
+          <button type="submit" class="btn btn-light btn-sm" id="save" name="saveid" value="{{post.id}}">save</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+  {% elif object.id %}
+    <tr>
+      <td class="likedisplay">
+        {% if user in object.likes.all %}
+        <button id="like" type="submit" name="posts_id" value="{{object.id}}">
+          <img width="50" height="50" src="{% static 'blog/download1.png' %}">
+        </button>
+        {% else %}
+        <button id="like" type="submit" name="posts_id" value="{{object.id}}">
+          <img width="50" height="50" src="{% static 'blog/download.png' %}">
+        </button>
+        {% endif %}
+      </td>
+      <td class="likedisplay">
+        <p class="likedusers" style="color:black;">{{object.number_of_likes}}Like{{object.number_of_likes|pluralize }}</p>
+      </td>
+      <td class="savepost">
+        <form action="{% url 'save' %}">
+          {% if object in user.savedposts.posts.all %}
+          <button type="submit" class="btn btn-dark btn-sm" id="save" name="saveid" value="{{object.id}}">saved</button>
+          {% else %}
+          <button type="submit" class="btn btn-light btn-sm" id="save" name="saveid" value="{{object.id}}">save</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr>
+      <td class="likedisplay">
+        {% if user in i.likes.all %}
+        <button id="like" type="submit" name="posts_id" value="{{i.id}}">
+          <img width="50" height="50" src="{% static 'blog/download1.png' %}">
+        </button>
+        {% else %}
+        <button id="like" type="submit" name="posts_id" value="{{i.id}}">
+          <img width="50" height="50" src="{% static 'blog/download.png' %}">
+        </button>
+        {% endif %}
+      </td>
+      <td class="likedisplay">
+        <p class="likedusers" style="color:black;">{{i.number_of_likes}}Like{{i.number_of_likes|pluralize }}</p>
+
+      </td>
+      <td class="savepost">
+        <form action="{% url 'save' %}">
+          {% if i in user.savedposts.posts.all %}
+          <button type="submit" class="btn btn-dark btn-sm" id="save" name="saveid" value="{{i.id}}">saved</button>
+          {% else %}
+          <button type="submit" class="btn btn-light btn-sm" id="save" name="saveid" value="{{i.id}}">save</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+  {% endif %}
+    </tbody>
+</table>
+</form>
+<div id="likedusers" style="margin-left:0%;">
+  <span style="border:none;background-color: rgba(255, 255, 255, 0);" onclick="likedusers()">
+    <strong class="btn btn-light btn-sm" style="color: black;">likedusers</strong>
+  </span>
+  <span style="border:none;background-color: rgba(255, 255, 255, 0);" onclick="commentedusers()">
+    <strong class="btn btn-light btn-sm" style="color: black;">commentedusers</strong>
+  </span>
+</div>
+{% if post.id %}
+<div id="mydiv"
+  style="display:none;height:250px;overflow-y:scroll;border:0.5px solid rgba(0, 0, 0, 0.096);border-radius:5px;margin-top:5%;">
+  {% for i in post.likes.all %}
+    <a class="text-decoration-none"  href="{% url 'user-posts' i %}">
+      <img class="circle float-start" style="width:50px;height:50px;border:0.5px solid white;" src="{{ i.profile.image.url }}">
+      <span style="color:black;font-size:30px;">{{i}}</span>
+    </a>
+    <hr>
+  {% endfor %}
+</div>
+{% else %}
+<div id="mydiv"
+  style="display:none;height:250px;overflow-y:scroll;border:0.5px solid rgba(0, 0, 0, 0.096);border-radius:5px;margin-top:5%;">
+  {% for i in object.likes.all %}
+    <a class="text-decoration-none" href="{% url 'user-posts' i %}">
+      <img class="circle responsive-img"
+        style="width:50px;height:50px;border:0.5px solid white;" src="{{ i.profile.image.url }}">
+      <span style="color:black;font-size:30px;">{{i}}</span>
+    </a>
+    <hr>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+{% endif %}

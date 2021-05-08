@@ -1,0 +1,22 @@
+{% load static %}
+<style>
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  padding-left:2%;
+  padding-top:5%;
+  margin-top:5%;
+  opacity: 1; /* Firefox */
+}
+
+</style>
+          {% if user.is_authenticated %}
+          <form id="commentform" action="{% url 'addcomment1' %}" value="{{i.id}}" method="POST" >
+            {% csrf_token %}
+                <input style="display:none;" type="text" id="id"  value="{{i.id}}">
+                <div class="input-group mb-3">
+                <input type="text" id="desc{{i.id}}" class="form-control" placeholder="add comment" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-primary" type="submit" id="button-addon2">Post</button>
+                </div>
+          </form>
+         
+          {% endif %}

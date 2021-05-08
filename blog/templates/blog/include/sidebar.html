@@ -1,0 +1,64 @@
+
+<div class="col-sm-4">
+  <div class="list-group" style="margin-top: 1%;">
+    {% if a == 0 %}
+      <a class="list-group-item list-group-item-dark" href="{% url 'blog-home' %}">
+        <div class="collapsible-header hoverable ">Latest Posts</div>
+      </a>
+    {% else %}
+      <a class="list-group-item list-group-item-action" href="{% url 'blog-home' %}">
+        <div class="collapsible-header hoverable ">Latest Posts</div>
+      </a>
+    {% endif %}
+    {% if a == 1 %}
+      <a class="list-group-item list-group-item-dark" href="{% url 'myposts' %}">
+        <div class="collapsible-header hoverable">My posts</div>
+      </a>
+
+    {% else %}
+      <a class="list-group-item list-group-item-action" href="{% url 'myposts' %}">
+        <div class="collapsible-header hoverable">My posts</div>
+      </a>
+
+    {% endif %}
+    {% if a == 2 %}
+    <li class="list-group-item list-group-item-dark">
+      <div class="collapsible-header hoverable">search posts by name
+        <div>
+          <form action="{% url 'mysearch' %}">
+            <input type="text" style="border:1px solid black;border-radius:5px;width:100%;" name="val1">
+            <br>
+            <button type="submit" style="border:none;"><a class="waves-effect waves-light btn">search</a></button>
+          </form>
+          <div>
+            {% if not b and a == 2 %}
+            <span style="color:red;">no username found</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </li>
+    {% else %}
+    <li class="list-group-item list-group-item-action" >
+      <div class="collapsible-header hoverable">search posts by name
+        <div>
+          <form action="{% url 'mysearch' %}">
+            <input type="text" style="border:1px solid black;border-radius:5px;width:100%;" name="val1">
+            <br>
+            <button type="submit" style="border:none;"><a class="waves-effect waves-light btn">search</a></button>
+
+          </form>
+          <div>
+            {% if not b and a == 2 %}
+            <span style="color:red;">no username found</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </li>
+
+    {% endif %}
+
+  </div>
+</div>
