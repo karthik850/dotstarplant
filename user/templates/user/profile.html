@@ -1,0 +1,76 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+  label {
+    font-size: 20px;
+    color: black;
+    font-weight: 600;
+  }
+</style>
+
+<div class="container-xl">
+  <div class="col-12">
+    <br>
+    <div class="card-group">
+      <div class="card border-0">
+        <div class="d-flex justify-content-center">
+          <img id="userimg" src="{{user.profile.image.url}}" alt="Card image">
+        </div>
+      </div>
+      <div class="card border-0">
+        <h3>{{user.username}}</h3>
+        <h5>{{user.email}}</h5>
+        <h6>{{user.profile.bio}}</h6>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-12">
+        <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#test1"
+              type="button" role="tab" aria-controls="pills-home" aria-selected="true">edit application</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#test2" type="button"
+              role="tab" aria-controls="pills-profile" aria-selected="false">connected users</button>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="test1" role="tabpanel" aria-labelledby="pills-home-tab">
+          <div style="border:1px solid black;border-radius:10px;">
+            <form method="POST" style="margin:5%;" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{u_form|crispy}}
+              {{p_form|crispy}}
+              <button type="submit" style="border:none;"><a class="btn btn-success">Update</a></button>
+            </form>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="test2" role="tabpanel" aria-labelledby="pills-profile-tab">
+          <div id="myfollowers"
+            style="height:250px;overflow-y:scroll;border:0.5px solid rgba(0, 0, 0, 0.096);border-radius:5px;">
+            {% include 'user/myfollowers.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--<div style="border:1px solid black;border-radius:10px;">
+                  <form method="POST" style="margin:5%;" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{u_form.as_p}}
+                      {{p_form.as_p}}
+                      <button type="submit" style="border:none;"><a class="waves-effect waves-light btn">Update</a></button>
+                  </form>
+                  </div>-->
+  </div>
+
+</div>
+
+{% endblock %}

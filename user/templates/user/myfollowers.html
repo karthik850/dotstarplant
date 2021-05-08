@@ -1,0 +1,17 @@
+<strong style="color: black;">{{ user.profile.number_of_followers }} connect{{user.profile.number_of_followers|pluralize }}</strong>
+{% for i in user.profile.followers.all %}
+<div style="padding-left:15px;">
+  <a class="text-decoration-none" href="{% url 'user-posts' i %}"><img class="circle responsive-img"
+      style="width:50px;height:50px;margin-top:1%;border:0.5px solid white;" src="{{ i.image.url }}">
+    <span style="color:black;font-size:20px;margin-top:-5px;">{{i}}</span>
+  </a>
+  <form id="disconnectform" value="{{i.id}}" action="{% url 'disconnect1' %}"
+    style="float: right;margin-top:2%;margin-right:2%;">
+    <button id="disconnect{{i.id}}" class="btn btn-danger btn-sm" type="submit" name="u_id" value="{{i.id}}">
+      disconnect
+    </button>
+  </form>
+  <br>
+  <br>
+</div>
+{% endfor %}
