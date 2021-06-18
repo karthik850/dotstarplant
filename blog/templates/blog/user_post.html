@@ -1,0 +1,240 @@
+{% extends "blog/base.html" %}
+{% block content %}
+{% load static %}
+<style>
+  #likedusers {
+    display: none;
+  }
+</style>
+<div class="container-xl">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="card-group" style="margin-top:1%;">
+        {% if a == 1 %}
+        <div class="card border-0">
+          <div class="d-flex justify-content-center">
+            <img id="userimg" src="{{user.profile.image.url}}" class="img-thumbnail">
+          </div>
+        </div>
+        <div class="card border-0">
+          <h3>{{user.username}}</h3>
+          <h5>{{user.email}}</h5>
+          <h6>{{user.profile.bio}}</h6>
+        </div>
+
+        {% elif a == 2 %}
+        <div class="card border-0">
+          <div class="d-flex justify-content-center">
+            <img id="userimg" src="{{b.profile.image.url}}" class="img-thumbnail">
+          </div>
+        </div>
+        <div class="card border-0">
+          <h3>{{b}}</h3>
+          <h5>{{b.email}}</h5>
+          <h6>{{b.profile.bio}}</h6>
+
+          {% if user.is_authenticated %}
+          {% ifnotequal b user %}
+          {% if user.profile in b.profile.followers.all %}
+          <form action="{% url 'follower' b %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{b.profile.id}}"
+              style="background-color: rgba(192, 62, 62, 0.473);box-shadow:2px 2px 2px,black;color:black;">
+              disconnect
+            </button>
+          </form>
+          {% elif user.profile in b.profile.request.all %}
+          <form action="{% url 'send_request' b %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{b.profile.id}}"
+              style="background-color: rgba(0, 0, 0, 0.103);box-shadow:2px 2px 2px,black;color:black;">
+              resendrequest
+            </button>
+            <span style="color:black;"><i>please be patient</i></span>
+          </form>
+          {% else %}
+          <form action="{% url 'send_request' b %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{b.profile.id}}"
+              style="background-color: rgba(0, 0, 0, 0.103);box-shadow:2px 2px 2px,black;color:black;">
+              connect
+            </button>
+          </form>
+          {% endif %}
+          <strong class="text-secondary" style="color:black;">{{ b.profile.number_of_followers }}connect{{b.profile.number_of_followers|pluralize }}</strong>
+          {% endifnotequal %}
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="card border-0">
+          <div class="d-flex justify-content-center">
+            <img id="userimg" src="{{ name.profile.image.url }}">
+          </div>
+        </div>
+
+        <div class="card border-0">
+          <!--<h3>Posts by {{view.kwargs.username}}</h3>-->
+          <h3>{{name}}</h3>
+          <h5>{{name.email}}</h5>
+          <h6>{{name.profile.bio}}</h6>
+          {% if user.is_authenticated %}
+          {% ifnotequal name user %}
+          {% if user.profile in name.profile.followers.all %}
+          <form action="{% url 'disconnect' name %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{name.profile.id}}"
+              style="background-color: rgba(192, 62, 62, 0.473);box-shadow:2px 2px 2px,black;color:black;">
+              disconnect
+            </button>
+          </form>
+          {% elif user.profile in name.profile.request.all %}
+          <form action="{% url 'send_request' name %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{name.profile.id}}"
+              style="background-color: rgba(0, 0, 0, 0.103);box-shadow:2px 2px 2px,black;color:black;">
+              resendrequest
+            </button>
+            <span style="color:black;"><i>please be patient</i></span>
+          </form>
+          {% else %}
+          <form action="{% url 'send_request' name %}">
+            <button class="btn waves-effect waves-light" type="submit" name="u_id" value="{{name.profile.id}}"
+              style="background-color: rgba(0, 0, 0, 0.103);box-shadow:2px 2px 2px,black;color:black;">
+              connect
+            </button>
+          </form>
+          {% endif %}
+          <strong class="text-secondary" style="color:black;">{{ name.profile.number_of_followers }}connect{{name.profile.number_of_followers|pluralize }}</strong>
+          {% endifnotequal %}
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+      <br>
+      <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#test1"
+              type="button" role="tab" aria-controls="pills-home" aria-selected="true">Posts</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#test2" type="button"
+              role="tab" aria-controls="pills-profile" aria-selected="false">connected users</button>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="test1" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div>
+              {% if page_obj %}
+          {% for i in page_obj %}
+          <div id="{{i.id}}" class="card" style="background-color:lightgray;border-radius:5px 10px;margin-top:1%;">
+            <div class="card-header">
+              <img id="postimg" class="img-thumbnail rounded-circle" src="{{ i.author.profile.image.url }}">
+              <!-- notice the "circle" class -->
+              <span class="black-text" style="font-size: 20px;">
+                <a class="text-decoration-none" href="{% url 'user-posts' i.author.username %}"
+                  style="font-size: 30px;color:black">{{ i.author }} </a>
+              </span>
+              <span class="black-text" style="font-size: 15px;">
+                <small>{{ i.date_posted }}</small>
+              </span>
+            </div>
+            <div class="card-body" style="margin-left:1%;">
+              <a class="text-decoration-none" href="{% url 'post-detail' i.id %}" style="color:black">
+                <div>
+                  <h4 class="card-title" style="text-transform: capitalize;">{{ i.title }}</h4>
+                  {% if i.image != "default.jpg" %}
+                  <a href="{{i.image.url}}"><img src="{{i.image.url}}"
+                      style="width:100%;height:400px;object-fit: cover; border-radius:10px;"></a>
+                  {% endif %}
+                  <p class="card-text">{{ i.content }}</p>
+    
+                </div>
+              </a>
+              <div id="likesection{{i.id}}">
+                {% include 'blog/likesection.html' %}
+              </div>
+              <div id="commentsection">
+                {% include 'blog/commentsection.html' %}
+              </div>
+              <a class="text-decoration-none" href="{% url 'post-detail' i.id %}" style="margin-left:1%;">View all
+                comments</a>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div class="card">
+            <img src="{% static 'blog/no posts.png' %}">
+          </div>
+          {% endif %}
+            </div>
+          </div>
+          <div class="tab-pane fade" id="test2" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div id="myfollowers"
+              style="height:100%;overflow-y:scroll;">
+              {% if a == 1 %}
+              {% include 'user/myfollowers.html' %}
+              {% elif a == 2 %}
+              <strong style="color: black;">{{ b.profile.number_of_followers }} connect{{b.profile.number_of_followers|pluralize }}</strong>
+              {% for j in b.profile.followers.all %}
+              <div style="padding-left:15px;">
+                <a class="text-decoration-none" href="{% url 'user-posts' j %}"><img class="circle responsive-img"
+                    style="margin-top:1%;border:0.5px solid white;" src="{{ j.image.url }}">
+                  <span style="color:black;font-size:20px;margin-top:-5px;">{{j}}</span>
+                </a>
+                <br>
+                <br>
+              </div>
+              {% endfor %}
+              {% else %}
+              <strong style="color: black;">{{ name.profile.number_of_followers }} connect{{name.profile.number_of_followers|pluralize }}</strong>
+              {% for j in name.profile.followers.all %}
+              <div style="padding-left:15px;">
+                <a class="text-decoration-none" href="{% url 'user-posts' j %}"><img class="circle responsive-img"
+                    style="width:50px;height:100%;margin-top:1%;border:0.5px solid white;" src="{{ j.image.url }}">
+                  <span style="color:black;font-size:20px;margin-top:-5px;">{{j}}</span>
+                </a>
+                <br>
+                <br>
+              </div>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+    
+      </div>
+ 
+    {% include 'blog/include/sidebar.html' %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <br>
+  {% if page_obj.has_previous %}
+  <a class="btn btn-outline-primary btn-sm" href="?page=1">First</a>
+  <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+  {% if page_obj.number == num %}
+  <a class="btn btn-outline-primary btn-m" href="?page={{ num }}">{{num}}</a>
+  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a class="btn btn-outline-primary btn-sm"
+    href="?page={{num}}">{{num}}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a class="btn btn-outline-primary btn-sm" href="?page={{1page_obj.previous_page_number}}">Next</a>
+    <a class="btn btn-outline-primary btn-sm" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+    {% endif %}
+
+</div>
+
+
+
+<div style="position: fixed;bottom:5%;right:2.5%;">
+  <ul style="list-style: none;">
+    <li><a href="{% url 'post-create' %}"><img src="https://static.thenounproject.com/png/3318800-200.png"
+          style="height:50px;width:50px;"></a></li>
+
+  </ul>
+</div>
+
+{% endblock content %}
